@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+const tbc = 'Coming soon';
+---
+<BaseLayout title={`Contact | ${site.title} (${site.shortName})`} description={`Contact the organisers of the ${site.title}.`}>
+  <PageHero eyebrow="Contact" title="Get in touch" intro="Questions about the conference? Our contact details will be published here soon." />
+
+  <section class="section" aria-labelledby="c-h">
+    <div class="container">
+      <h2 id="c-h" class="sr-only">Contact details</h2>
+      <ul class="cards">
+        <li>
+          <h3>Email</h3>
+          {site.contactEmail ? <a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a> : <p class="tbc">{tbc}</p>}
+        </li>
+        <li>
+          <h3>Phone</h3>
+          {site.phone ? <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a> : <p class="tbc">{tbc}</p>}
+        </li>
+        <li>
+          <h3>Venue</h3>
+          <p class={site.venue ? '' : 'tbc'}>{site.venue ?? 'To be announced'}</p>
+          <p class="sub">{site.location}</p>
+        </li>
+        <li>
+          <h3>Organiser</h3>
+          <p>{site.organiserFull}</p>
+          <a href={`https://${site.domain}/`} rel="noopener">{site.domain}</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section mint" aria-labelledby="s-h">
+    <div class="container">
+      <h2 id="s-h">Follow the conversation</h2>
+      {site.socials.length ? (
+        <ul class="soc">{site.socials.map((s) => <li><a class="btn btn-outline" href={s.href} rel="noopener">{s.label}</a></li>)}</ul>
+      ) : <p>Social media links will be added here soon. In the meantime, visit <a href={`https://${site.domain}/`} rel="noopener">{site.domain}</a> for MESHA news.</p>}
+      <p class="sub">Questions about registration will have their own contact once registration opens.</p>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .cards{list-style:none;padding:0;margin:0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .cards li{padding:var(--s3);border-radius:var(--r-md);background:var(--mint-50);border-top:4px solid var(--lime-400)}
+  .cards h3{font-size:1.05rem}.cards p{margin:0 0 .4rem}
+  .tbc{color:var(--green-800);font-style:italic}
+  .sub{font-size:.95rem;opacity:.8}
+  .soc{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:var(--s1)}
+</style>

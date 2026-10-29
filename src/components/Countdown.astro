@@ -1,0 +1,28 @@
+---
+// Counts down to the first day of the conference (Nairobi time). Start time TBC, so date-level only.
+const target = '2027-04-26T00:00:00+03:00';
+---
+<div class="cd" data-target={target} role="timer" aria-label="Time until the conference begins">
+  {['Days', 'Hours', 'Minutes', 'Seconds'].map((u) => (
+    <div><span class="n" data-unit={u.toLowerCase()}>--</span><span class="u">{u}</span></div>
+  ))}
+</div>
+<style>
+  .cd{display:flex;flex-wrap:wrap;gap:.6rem}
+  .cd div{display:grid;justify-items:center;min-width:4.25rem;padding:.6rem .5rem;border:1px solid rgba(169,209,79,.5);border-radius:var(--r-md);background:rgba(7,46,30,.55)}
+  .n{font:800 1.9rem var(--font-display);color:var(--lime-400);line-height:1}
+  .u{font:600 .65rem var(--font-display);letter-spacing:.15em;text-transform:uppercase;opacity:.85}
+:global(html:not(.js)) .cd{display:none}
+</style>
+<script>
+  const el = document.querySelector<HTMLElement>('.cd');
+  if (el) {
+    const t = new Date(el.dataset.target!).getTime();
+    const set = (u: string, v: number) => { const n = el.querySelector(`[data-unit="${u}"]`); if (n) n.textContent = String(v).padStart(2, '0'); };
+    const tick = () => {
+      const d = Math.max(0, t - Date.now());
+      set('days', Math.floor(d / 864e5)); set('hours', Math.floor(d / 36e5) % 24); set('minutes', Math.floor(d / 6e4) % 60); set('seconds', Math.floor(d / 1e3) % 60);
+    };
+    tick(); setInterval(tick, 1000);
+  }
+</script>

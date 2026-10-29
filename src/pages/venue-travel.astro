@@ -1,0 +1,60 @@
+---
+import { u } from '../utils/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+import { venue, travelInfo } from '../data/venue';
+---
+<BaseLayout title={`Venue & Travel | ${site.title} (${site.shortName})`} description={`Venue and travel information for the ${site.title}, ${site.dates}, ${site.location}.`}>
+  <PageHero eyebrow="Venue & Travel" title={`Join us in ${site.location.split(',')[0]}`} intro="Venue and travel details will be published here once confirmed." />
+
+  <section class="section" aria-labelledby="v-h">
+    <div class="container grid-2 top">
+      <div>
+        <h2 id="v-h">The venue</h2>
+        <dl class="facts">
+          <div><dt>Venue</dt><dd class={venue.name ? '' : 'tbc'}>{venue.name ?? 'To be announced'}</dd></div>
+          <div><dt>Address</dt><dd class={venue.address ? '' : 'tbc'}>{venue.address ?? 'To be announced'}</dd></div>
+          <div><dt>City</dt><dd>{site.location}</dd></div>
+          <div><dt>Dates</dt><dd>{site.dates}</dd></div>
+        </dl>
+        {venue.mapUrl && <a class="btn btn-outline" href={venue.mapUrl} rel="noopener">Open in Maps →</a>}
+      </div>
+      <div class="map" role="img" aria-label="Map placeholder">
+        <p>Map coming soon</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section mint" aria-labelledby="t-h">
+    <div class="container">
+      <p class="eyebrow">Plan your trip</p>
+      <h2 id="t-h">Travel information</h2>
+      <ul class="cards">
+        {travelInfo.map((c) => (
+          <li>
+            <h3>{c.title}</h3>
+            {c.items.length
+              ? <ul class="items">{c.items.map((i) => <li>{i}</li>)}</ul>
+              : <><p>{c.blurb}</p><p class="tbc">Information coming soon.</p></>}
+          </li>
+        ))}
+      </ul>
+      <p class="sub">Questions in the meantime? <a href={u('/contact')}>Contact the organisers</a>.</p>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .top{align-items:start}
+  .facts{margin:var(--s3) 0;display:grid;gap:var(--s2)}
+  .facts dt{font:700 .75rem var(--font-display);letter-spacing:.15em;text-transform:uppercase;color:var(--green-600)}
+  .facts dd{margin:0;font-weight:600}
+  .tbc{color:var(--green-800);font-style:italic;font-weight:400}
+  .map{display:grid;place-items:center;min-height:18rem;aspect-ratio:4/3;border-radius:var(--r-md);border:2px dashed var(--green-600);color:var(--green-800);font-weight:600;
+    background:linear-gradient(var(--mint-50),var(--mint-50)) padding-box,repeating-linear-gradient(45deg,transparent 0 14px,rgba(30,122,79,.08) 14px 15px)}
+  .cards{list-style:none;padding:0;margin:var(--s4) 0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .cards>li{padding:var(--s3);background:var(--white);border-radius:var(--r-md);border-top:4px solid var(--lime-400);box-shadow:0 1px 3px rgba(7,46,30,.08)}
+  .cards h3{font-size:1.1rem}.cards p{margin:0 0 .4rem}
+  .items{margin:0;padding-left:1.1rem}
+  .sub{margin:0}
+</style>

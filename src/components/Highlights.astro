@@ -1,0 +1,20 @@
+---
+import { highlights } from '../data/site';
+---
+<section class="section dark" aria-labelledby="hl-h">
+  <div class="container">
+    <p class="eyebrow">Key highlights</p>
+    <h2 id="hl-h" class="sr-only">Key highlights</h2>
+    <ul class="grid">
+      {highlights.map((h, i) => (
+        <li><span class="num" aria-hidden="true">{i + 1}</span><h3>{h.title}</h3><p>{h.text}</p></li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .grid{list-style:none;padding:0;margin:var(--s4) 0 0;display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .num{display:grid;place-items:center;width:3rem;height:3rem;border:2px solid var(--lime-400);border-radius:50%;color:var(--lime-400);font:800 1.1rem var(--font-display);margin-bottom:var(--s2)}
+  h3{font-size:1.1rem}
+  p{margin:0;opacity:.85}
+</style>

@@ -1,0 +1,24 @@
+---
+import { u } from '../utils/url';
+import { site, whyAttend } from '../data/site';
+---
+<section id="about" class="section" aria-labelledby="about-h">
+  <div class="container grid-2">
+    <div>
+      <p class="eyebrow">About the conference</p>
+      <h2 id="about-h">Bringing science closer to the people</h2>
+      <p>The {site.title} ({site.shortName}) brings together journalists, researchers, policymakers and innovators from across Africa and beyond to share knowledge, build skills and strengthen the role of science journalism in creating a more informed, resilient and sustainable future.</p>
+      <a class="btn btn-outline" href={u('/about')}>Learn More →</a>
+    </div>
+    <div class="why">
+      <h3 class="eyebrow">Why attend?</h3>
+      <ul>{whyAttend.map((w) => <li>{w}</li>)}</ul>
+    </div>
+  </div>
+</section>
+<style>
+  .why{background:var(--mint-50);padding:var(--s4);border-radius:var(--r-md)}
+  .why ul{list-style:none;padding:0;margin:0;display:grid;gap:var(--s2)}
+  .why li{padding-left:1.75rem;position:relative;font-weight:600}
+  .why li::before{content:'';position:absolute;left:0;top:.45rem;width:.9rem;height:.9rem;border-radius:50%;background:var(--green-800);box-shadow:0 0 0 3px var(--lime-400)}
+</style>

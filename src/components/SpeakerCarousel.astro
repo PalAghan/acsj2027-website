@@ -1,0 +1,41 @@
+---
+import { u } from '../utils/url';
+const slots = [1, 2, 3, 4];
+---
+<section id="speakers" class="section" aria-labelledby="sp-h">
+  <div class="container">
+    <p class="eyebrow">Featured speakers</p>
+    <h2 id="sp-h">Expert voices. African perspectives.</h2>
+    <p>Our speaker lineup is coming soon. Stay tuned for inspiring journalists, scientists and thought leaders.</p>
+    <div class="ctrls">
+      <button type="button" data-dir="-1" aria-label="Previous speakers">←</button>
+      <button type="button" data-dir="1" aria-label="Next speakers">→</button>
+    </div>
+    <ul class="track" tabindex="0" aria-label="Speakers (to be announced)">
+      {slots.map(() => (
+        <li class="card">
+          <div class="ph" aria-hidden="true"></div>
+          <span class="badge">Speaker (TBC)</span>
+          <strong>Name will be announced</strong>
+          <small>Affiliation (TBC)</small>
+        </li>
+      ))}
+    </ul>
+    <p><a class="btn btn-outline" href={u('/speakers')}>View all speakers →</a></p>
+  </div>
+</section>
+<style>
+  .ctrls{display:flex;gap:.5rem;margin:var(--s2) 0}
+  .ctrls button{width:2.75rem;height:2.75rem;border-radius:50%;border:2px solid var(--green-800);background:none;color:var(--green-800);font-size:1.1rem;cursor:pointer}
+  .ctrls button:hover{background:var(--green-800);color:var(--white)}
+  .track{list-style:none;padding:0 0 var(--s1);margin:0;display:flex;gap:var(--s2);overflow-x:auto;scroll-snap-type:x mandatory}
+  .card{flex:0 0 min(240px,75%);scroll-snap-align:start;background:var(--mint-50);border-radius:var(--r-md);padding:var(--s2);display:grid;gap:.4rem;justify-items:center;text-align:center}
+  .ph{width:100%;aspect-ratio:1;border-radius:var(--s1);background:radial-gradient(circle at 50% 35%,#a9b8a9 0 22%,transparent 23%),radial-gradient(ellipse at 50% 100%,#a9b8a9 0 38%,transparent 39%),#dbe6d6}
+:global(html:not(.js)) .ctrls{display:none}
+</style>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('#speakers [data-dir]').forEach((b) =>
+    b.addEventListener('click', () => {
+      document.querySelector('#speakers .track')!.scrollBy({ left: Number(b.dataset.dir) * 260, behavior: 'smooth' });
+    }));
+</script>

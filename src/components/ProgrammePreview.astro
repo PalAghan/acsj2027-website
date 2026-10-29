@@ -1,0 +1,22 @@
+---
+import { u } from '../utils/url';
+import { days } from '../data/site';
+---
+<section id="programme" class="section mint" aria-labelledby="pr-h">
+  <div class="container">
+    <p class="eyebrow">Programme preview</p>
+    <h2 id="pr-h">Three days of insight, engagement and action</h2>
+    <p>The full programme is coming soon.</p>
+    <ul class="days">
+      {days.map((d) => (
+        <li class="day dark"><p class="eyebrow">{d.date}</p><h3>Day {d.n}</h3><p>Programme to be announced</p></li>
+      ))}
+    </ul>
+    <a class="btn btn-outline" href={u('/programme')}>View full programme →</a>
+  </div>
+</section>
+<style>
+  .days{list-style:none;padding:0;margin:var(--s4) 0;display:grid;gap:var(--s2);grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .day{padding:var(--s3);border-radius:var(--r-md);background:var(--green-800)}
+  .day p{margin:0}
+</style>

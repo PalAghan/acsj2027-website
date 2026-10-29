@@ -1,0 +1,9 @@
+---
+import { u } from '../utils/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+<BaseLayout title="Page not found | ACSJ 2027">
+  <PageHero eyebrow="Error 404" title="We could not find that page" intro="The page may have moved or the address may be mistyped." />
+  <section class="section"><div class="container"><a class="btn btn-primary" href={u('/')}>Back to the homepage</a></div></section>
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import { u } from '../utils/url';
+import { site } from '../data/site';
+const norm = (s: string) => s.replace(/\/$/, '') || '/';
+const path = norm(Astro.url.pathname);
+---
+<header class="hdr dark">
+  <div class="container bar">
+    <a class="logo" href={u('/')} aria-label="MESHA home"><img src={u('/images/mesha-logo-reversed.png')} width="755" height="331" alt="MESHA" /></a>
+    <button class="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav" aria-label="Main">
+      <ul>{site.nav.map((n) => <li><a href={u(n.href)} aria-current={norm(u(n.href)) === path ? 'page' : undefined}>{n.label}</a></li>)}</ul>
+      <a class="btn btn-primary" href={u(site.registerHref)}>Register Now →</a>
+    </nav>
+  </div>
+</header>
+<style>
+  .hdr{position:sticky;top:0;z-index:50}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.75rem}
+  .logo{display:block}
+  .logo img{height:2.9rem;width:auto}
+  .menu{background:none;border:2px solid var(--lime-400);color:var(--white);padding:.4rem .9rem;border-radius:var(--r-pill);font:700 .85rem var(--font-display)}
+  nav{display:none;position:absolute;left:0;right:0;top:100%;background:var(--green-950);padding:1rem}
+  nav.open{display:block}
+  ul{list-style:none;margin:0 0 1rem;padding:0}
+  li a{display:block;padding:.6rem 0;color:var(--white);text-decoration:none;font:600 .9rem var(--font-display)}
+  li a:hover,li a[aria-current]{color:var(--lime-400)}
+  @media(min-width:1100px){
+    .menu{display:none}
+    nav{display:flex;position:static;padding:0;align-items:center;gap:1.5rem;background:none}
+    ul{display:flex;gap:1.25rem;margin:0}
+    li a{padding:.25rem 0;font-size:.8rem}
+  }
+</style>
+<script>
+  const btn = document.querySelector('.menu'), nav = document.getElementById('nav');
+  btn?.addEventListener('click', () => {
+    const open = nav!.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+  nav?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { nav.classList.remove('open'); btn?.setAttribute('aria-expanded', 'false'); (btn as HTMLElement).focus(); }
+  });
+</script>

@@ -1,0 +1,23 @@
+---
+import { u } from '../utils/url';
+import { partners } from '../data/partners';
+const slots = [1, 2, 3, 4, 5];
+---
+<section id="partners" class="section" aria-labelledby="pt-h">
+  <div class="container">
+    <p class="eyebrow">Our partners</p>
+    <h2 id="pt-h">Working together for a stronger science journalism ecosystem</h2>
+    <ul class="logos">
+      {partners.length
+        ? partners.slice(0, 8).map((p) => <li class="real"><img src={u(p.logo)} alt={p.name} loading="lazy" /></li>)
+        : slots.map(() => <li>Partner logo (TBC)</li>)}
+    </ul>
+    <p><a class="btn btn-outline" href={u('/partners')}>View all partners →</a></p>
+  </div>
+</section>
+<style>
+  .logos{list-style:none;padding:0;margin:var(--s3) 0 0;display:grid;gap:var(--s2);grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .real{background:var(--white);border:1px solid #d3e3cc!important}
+  .real img{max-height:3.5rem;width:auto;max-width:100%}
+  .logos li{display:grid;place-items:center;min-height:5rem;border:1px dashed var(--green-600);border-radius:var(--s1);font-size:.8rem;color:var(--green-800)}
+</style>

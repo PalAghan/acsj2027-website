@@ -1,0 +1,19 @@
+{
+  "name": "acsj2027",
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.4",
+    "@fontsource-variable/montserrat": "5.3.0",
+    "@fontsource-variable/source-sans-3": "5.3.1",
+    "astro": "7.4.4"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  }
+}

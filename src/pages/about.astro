@@ -1,0 +1,91 @@
+---
+import { u } from '../utils/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site, highlights } from '../data/site';
+const glance = [
+  ['Dates', site.dates], ['Location', site.location],
+  ['Venue', site.venue ?? 'To be announced'], ['Organiser', `${site.organiser} (${site.organiserFull})`],
+];
+const audience = ['Journalists', 'Researchers', 'Policymakers', 'Innovators']; // from mockup copy; draft
+---
+<BaseLayout title={`About | ${site.title} (${site.shortName})`} description={`About the ${site.title}, ${site.dates}, ${site.location}.`}>
+  <PageHero eyebrow="About the conference" title="Bringing science closer to the people" intro={site.theme} />
+
+  <section class="section" aria-labelledby="ov-h">
+    <div class="container grid-2 top">
+      <div>
+        <h2 id="ov-h">The conference</h2>
+        <p>The {site.title} ({site.shortName}) brings together journalists, researchers, policymakers and innovators from across Africa and beyond to share knowledge, build skills and strengthen the role of science journalism in creating a more informed, resilient and sustainable future.</p>
+        <p>It takes place in {site.location} from {site.dates}, and is organised by {site.organiser}.</p>
+      </div>
+      <dl class="glance">
+        {glance.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section dark" aria-labelledby="th-h">
+    <div class="container">
+      <p class="eyebrow">Conference theme</p>
+      <h2 id="th-h">{site.theme}</h2>
+      <ul class="pills"><li>Science</li><li>AI</li><li>The future of African reporting</li></ul>
+      <p class="note">The theme is subject to final confirmation. A fuller description will follow.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="who-h">
+    <div class="container">
+      <p class="eyebrow">Who it is for</p>
+      <h2 id="who-h">Bringing together voices from across Africa and beyond</h2>
+      <ul class="cards">{audience.map((a) => <li>{a}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="section mint" aria-labelledby="ex-h">
+    <div class="container">
+      <p class="eyebrow">What to expect</p>
+      <h2 id="ex-h">Highlights</h2>
+      <ul class="hl">{highlights.map((h) => <li><h3>{h.title}</h3><p>{h.text}</p></li>)}</ul>
+      <p class="note dim">Draft wording, pending confirmation of the programme.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="mesha-h">
+    <div class="container grid-2 top">
+      <div>
+        <p class="eyebrow">The organiser</p>
+        <h2 id="mesha-h">About MESHA</h2>
+        <p>{site.organiserFull} ({site.organiser}), the centre of science journalism in Africa.</p>
+        <a class="btn btn-outline" href="https://meshascience.org/about/" rel="noopener">More about MESHA →</a>
+      </div>
+      <div class="past">
+        <h3>Previous editions</h3>
+        <p>Details of earlier conferences are coming soon.</p>
+        <p><a href="https://meshascience.org/mesha-set-to-hold-6th-african-conference-of-science-journalists-in-april-2027/" rel="noopener">Read MESHA’s announcement of the 6th conference</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section dark cta" aria-labelledby="cta-h">
+    <div class="container">
+      <h2 id="cta-h">Be part of Africa’s science story</h2>
+      <a class="btn btn-primary" href={u(site.registerHref)}>Register Now →</a>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .top{align-items:start}
+  .glance{margin:0;background:var(--mint-50);border-radius:var(--r-md);padding:var(--s3);display:grid;gap:var(--s2)}
+  .glance dt{font:700 .7rem var(--font-display);letter-spacing:.15em;text-transform:uppercase;color:var(--green-600)}
+  .glance dd{margin:0;font-weight:600}
+  .pills{list-style:none;padding:0;margin:var(--s3) 0;display:flex;flex-wrap:wrap;gap:var(--s1)}
+  .pills li{border:2px solid var(--lime-400);color:var(--lime-400);border-radius:var(--r-pill);padding:.35rem 1rem;font:700 .9rem var(--font-display)}
+  .note{opacity:.8;font-size:.95rem;margin:0}.dim{color:var(--green-800)}
+  .cards{list-style:none;padding:0;margin:var(--s4) 0 0;display:grid;gap:var(--s2);grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  .cards li{padding:var(--s4) var(--s3);border-radius:var(--r-md);background:var(--green-800);color:var(--white);font:800 1.2rem var(--font-display);border-bottom:4px solid var(--lime-400)}
+  .hl{list-style:none;padding:0;margin:var(--s4) 0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .hl h3{font-size:1.1rem}.hl p{margin:0}
+  .past{border-left:4px solid var(--lime-400);padding-left:var(--s3)}
+  .cta{text-align:center}
+</style>

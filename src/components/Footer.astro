@@ -1,0 +1,30 @@
+---
+import { u } from '../utils/url';
+import { site } from '../data/site';
+---
+<footer class="dark section">
+  <div class="container grid">
+    <div>
+      <a class="logo" href={u('/')}><img src={u('/images/mesha-logo-reversed.png')} width="755" height="331" alt="MESHA" loading="lazy" /></a>
+      <p>{site.organiserFull}</p>
+    </div>
+    <div>
+      <p><strong>{site.title} ({site.shortName})</strong></p>
+      <p>{site.dates}<br />{site.location}</p>
+      {site.venue && <p>{site.venue}</p>}
+      {site.contactEmail && <p><a href={`mailto:${site.contactEmail}`}>{site.contactEmail}</a></p>}
+    </div>
+    <nav aria-label="Footer">
+      <ul>{site.nav.slice(0, 5).map((n) => <li><a href={u(n.href)}>{n.label}</a></li>)}</ul>
+    </nav>
+  </div>
+  <div class="container"><p class="copy">© 2027 {site.organiser}. All rights reserved.</p></div>
+</footer>
+<style>
+  .grid{display:grid;gap:var(--s4);margin-bottom:var(--s4)}
+  @media(min-width:800px){.grid{grid-template-columns:1.2fr 1.5fr 1fr}}
+  .logo{display:inline-block;margin-bottom:var(--s2)}
+  .logo img{height:3.6rem;width:auto}
+  ul{list-style:none;padding:0;margin:0;display:grid;gap:.4rem}
+  .copy{font-size:.85rem;opacity:.7;border-top:1px solid #1d5b36;padding-top:var(--s2);margin:0}
+</style>

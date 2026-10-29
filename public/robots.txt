@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://acsj.meshascience.org/sitemap-index.xml

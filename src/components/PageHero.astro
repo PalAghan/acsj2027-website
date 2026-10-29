@@ -1,0 +1,16 @@
+---
+const { eyebrow, title, intro } = Astro.props;
+---
+<section class="hero page-hero dark" aria-labelledby="page-title">
+  <div class="container inner">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 id="page-title">{title}</h1>
+    {intro && <p class="intro">{intro}</p>}
+  </div>
+</section>
+<style>
+  .page-hero{background:radial-gradient(110% 120% at 90% 0,#17754a 0,var(--green-800) 45%,var(--green-950) 100%);border-bottom:4px solid var(--lime-400)}
+  .inner{padding-block:clamp(2.5rem,7vw,4.5rem);display:grid;gap:var(--s2)}
+  h1{color:var(--white);font-size:clamp(2rem,1.2rem + 3.5vw,3.5rem);font-weight:800;max-width:20ch;margin:0}
+  .intro{max-width:60ch;font-size:1.2rem;margin:0}
+</style>

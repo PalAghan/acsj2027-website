@@ -1,0 +1,41 @@
+---
+import { u } from '../utils/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+import { speakers } from '../data/speakers';
+const placeholders = Array.from({ length: 8 });
+---
+<BaseLayout title={`Speakers | ${site.title} (${site.shortName})`} description={`Speakers at the ${site.title}, ${site.dates}, ${site.location}.`}>
+  <PageHero eyebrow="Speakers" title="Expert voices. African perspectives." intro="Our speaker lineup is coming soon. Speakers will appear here as they are confirmed." />
+  <section class="section" aria-label="Speakers">
+    <div class="container">
+      <ul class="grid">
+        {speakers.length ? speakers.map((s) => (
+          <li class="card">
+            {s.photo ? <img src={u(s.photo)} alt={`Portrait of ${s.name}`} width="400" height="400" loading="lazy" /> : <div class="ph" aria-hidden="true">{s.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</div>}
+            <h2>{s.name}</h2>
+            {(s.role || s.affiliation) && <p class="aff">{[s.role, s.affiliation].filter(Boolean).join(', ')}</p>}
+            {s.country && <p class="aff">{s.country}</p>}
+            {s.bio && <p class="bio">{s.bio}</p>}
+          </li>
+        )) : placeholders.map(() => (
+          <li class="card">
+            <div class="ph" aria-hidden="true"></div>
+            <span class="badge">Speaker (TBC)</span>
+            <h2>Name will be announced</h2>
+            <p class="aff">Affiliation (TBC)</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .grid{list-style:none;padding:0;margin:0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .card{display:grid;gap:.5rem;justify-items:start;padding:var(--s2);background:var(--white);border:1px solid #d3e3cc;border-radius:var(--r-md);box-shadow:0 1px 3px rgba(7,46,30,.08);transition:transform var(--ease),box-shadow var(--ease)}
+  .card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(7,46,30,.12)}
+  .card img,.ph{width:100%;aspect-ratio:1;object-fit:cover;border-radius:var(--s1)}
+  .ph{display:grid;place-items:center;font:800 2.2rem var(--font-display);color:var(--green-600);background:radial-gradient(circle at 50% 35%,#a9b8a9 0 20%,transparent 21%),radial-gradient(ellipse at 50% 100%,#a9b8a9 0 36%,transparent 37%),#dbe6d6}
+  h2{font-size:1.2rem;margin:0}.aff{margin:0;font-size:.95rem}.bio{margin:0;font-size:.95rem}
+</style>

@@ -1,0 +1,74 @@
+---
+import { u } from '../utils/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+import { programme, programmePdf } from '../data/programme';
+---
+<BaseLayout title={`Programme | ${site.title} (${site.shortName})`} description={`Programme of the ${site.title}, ${site.dates}, ${site.location}.`}>
+  <PageHero eyebrow="Programme" title="Three days of insight, engagement and action" intro="The full programme is coming soon. Sessions will appear here once confirmed." />
+  <section class="section" aria-label="Daily programme">
+    <div class="container">
+      <div class="dl">
+        {programmePdf
+          ? <a class="btn btn-primary" href={u(programmePdf)} download>Download the programme (PDF) ↓</a>
+          : <span class="btn btn-soon" aria-disabled="true">Programme PDF coming soon</span>}
+      </div>
+      <div class="tabs" role="tablist" aria-label="Conference days">
+        {programme.map((d, i) => (
+          <button role="tab" id={`tab-${d.n}`} aria-controls={`panel-${d.n}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
+            <span class="day">Day {d.n}</span><span class="date">{d.date}</span>
+          </button>
+        ))}
+      </div>
+      {programme.map((d) => (
+        <div class="panel" role="tabpanel" id={`panel-${d.n}`} aria-labelledby={`tab-${d.n}`}>
+          <h2>Day {d.n} · {d.date}</h2>
+          {d.sessions.length ? (
+            <ol class="sessions">
+              {d.sessions.map((s) => (
+                <li><time>{s.time}</time><div><h3>{s.title}</h3>
+                  {s.type && <span class="badge">{s.type}</span>}
+                  {s.location && <p class="meta">{s.location}</p>}
+                  {s.speakers?.length ? <p class="meta">{s.speakers.join(', ')}</p> : null}
+                </div></li>
+              ))}
+            </ol>
+          ) : <p class="tbc">The programme for Day {d.n} will be announced soon.</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .tabs{display:flex;gap:var(--s1);flex-wrap:wrap;margin-bottom:var(--s4)}
+  [role=tab]{display:grid;text-align:left;padding:.75rem 1.25rem;border-radius:var(--r-md);border:2px solid var(--green-800);background:none;color:var(--green-800);cursor:pointer;font-family:var(--font-display);transition:background var(--ease),color var(--ease)}
+  [role=tab] .day{font-weight:800}.date{font-size:.8rem}
+  [role=tab][aria-selected=true]{background:var(--green-800);color:var(--white);box-shadow:inset 0 -4px 0 var(--lime-400)}
+  .tbc{padding:var(--s4);background:var(--mint-50);border-radius:var(--r-md);border-left:4px solid var(--lime-400);margin:0}
+  .dl{margin-bottom:var(--s3)}
+  .btn-soon{background:var(--mint-50);color:var(--green-800);border:2px dashed var(--green-600);cursor:not-allowed}
+  .sessions{list-style:none;margin:0;padding:0;display:grid;gap:var(--s2)}
+  .sessions li{display:grid;grid-template-columns:7rem 1fr;gap:var(--s2);align-items:start;padding:var(--s2) var(--s3);background:var(--white);border:1px solid #d3e3cc;border-left:5px solid var(--lime-400);border-radius:var(--r-md);box-shadow:0 1px 3px rgba(7,46,30,.08)}
+  @media(max-width:560px){.sessions li{grid-template-columns:1fr}}
+  time{font:800 1rem var(--font-display);color:var(--green-600)}
+  h3{font-size:1.15rem;margin:0 0 .3rem}.meta{margin:.3rem 0 0;font-size:.95rem}
+:global(html:not(.js)) .tabs{display:none}
+</style>
+<script>
+  const tabs = [...document.querySelectorAll<HTMLElement>('[role=tab]')];
+  const show = (t: HTMLElement) => {
+    tabs.forEach((x) => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute('aria-controls')!)!.hidden = !on; });
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => show(t));
+    t.addEventListener('keydown', (e) => {
+      const k = e.key; if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(k)) return;
+      e.preventDefault();
+      const n = k === 'Home' ? 0 : k === 'End' ? tabs.length - 1 : (i + (k === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      tabs[n].focus(); show(tabs[n]);
+    });
+  });
+  show(tabs[0]);
+</script>

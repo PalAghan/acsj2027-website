@@ -1,0 +1,73 @@
+---
+import { u } from '../utils/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+import { registration as r } from '../data/registration';
+const intro = r.status === 'open' ? 'Registration is now open.' : r.status === 'closed' ? 'Registration has closed.' : 'Registration opens soon. Full details will be published here.';
+const info = [
+  { title: 'Payment options', items: r.paymentOptions, soon: 'Payment options will be announced.' },
+  { title: 'What is included', items: r.included, soon: 'Details of what registration includes will be announced.' },
+];
+---
+<BaseLayout title={`Registration | ${site.title} (${site.shortName})`} description={`Registration for the ${site.title}, ${site.dates}, ${site.location}.`}>
+  <PageHero eyebrow="Registration" title="Register for ACSJ 2027" intro={intro} />
+
+  <section class="section" aria-labelledby="st-h">
+    <div class="container">
+      <h2 id="st-h" class="sr-only">Registration status</h2>
+      <div class="status">
+        <p class="badge">{r.status === 'open' ? 'Open' : r.status === 'closed' ? 'Closed' : 'Opening soon'}</p>
+        <dl class="dates">
+          <div><dt>Registration opens</dt><dd class={r.opensOn ? '' : 'tbc'}>{r.opensOn ?? 'To be announced'}</dd></div>
+          <div><dt>Registration closes</dt><dd class={r.closesOn ? '' : 'tbc'}>{r.closesOn ?? 'To be announced'}</dd></div>
+          <div><dt>Conference</dt><dd>{site.dates}, {site.location}</dd></div>
+        </dl>
+        {r.status === 'open' && r.registerUrl && <a class="btn btn-primary" href={r.registerUrl} rel="noopener">Register now →</a>}
+      </div>
+    </div>
+  </section>
+
+  <section class="section mint" aria-labelledby="f-h">
+    <div class="container">
+      <p class="eyebrow">Categories and fees</p>
+      <h2 id="f-h">Who can register</h2>
+      {r.categories.length ? (
+        <div class="scroll"><table>
+          <caption class="sr-only">Registration categories and fees</caption>
+          <thead><tr><th scope="col">Category</th><th scope="col">Fee</th><th scope="col">Details</th></tr></thead>
+          <tbody>{r.categories.map((c) => <tr><th scope="row">{c.name}</th><td>{c.fee}</td><td>{c.description ?? ''}</td></tr>)}</tbody>
+        </table></div>
+      ) : <p class="tbc box">Registration categories and fees will be announced.</p>}
+    </div>
+  </section>
+
+  <section class="section" aria-label="More information">
+    <div class="container">
+      <ul class="cards">
+        {info.map((c) => (
+          <li><h3>{c.title}</h3>
+            {c.items.length ? <ul class="items">{c.items.map((i) => <li>{i}</li>)}</ul> : <p class="tbc">{c.soon}</p>}
+          </li>
+        ))}
+      </ul>
+      <p>Questions about registration? <a href={u('/contact')}>Contact the organisers</a>, or check <a href={u('/news')}>News</a> for announcements.</p>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .status{display:grid;gap:var(--s3);padding:var(--s4);background:var(--green-800);border-radius:var(--r-md);color:var(--white);justify-items:start}
+  .dates{margin:0;display:grid;gap:var(--s2);grid-template-columns:repeat(auto-fit,minmax(220px,1fr));width:100%}
+  .dates dt{font:700 .75rem var(--font-display);letter-spacing:.15em;text-transform:uppercase;color:var(--lime-400)}
+  .dates dd{margin:0;font-weight:600}
+  .dates .tbc{color:#eaf3e4}
+  .tbc{font-style:italic;color:var(--green-800)}
+  .box{padding:var(--s3);background:var(--white);border-left:4px solid var(--lime-400);border-radius:var(--r-md);margin:0}
+  .scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;background:var(--white);border-radius:var(--r-md)}
+  th,td{padding:.9rem 1rem;text-align:left;border-bottom:1px solid #d3e3cc}
+  thead th{background:var(--green-800);color:var(--white);font-family:var(--font-display)}
+  .cards{list-style:none;padding:0;margin:0 0 var(--s4);display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .cards>li{padding:var(--s3);background:var(--white);border:1px solid #d3e3cc;border-top:4px solid var(--lime-400);border-radius:var(--r-md);box-shadow:0 1px 3px rgba(7,46,30,.08)}
+  .cards h3{font-size:1.1rem}.cards p{margin:0}.items{margin:0;padding-left:1.1rem}
+</style>

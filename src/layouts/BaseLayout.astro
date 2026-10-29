@@ -1,0 +1,50 @@
+---
+import { u } from '../utils/url';
+import '../styles/global.css';
+import '@fontsource-variable/montserrat';
+import '@fontsource-variable/source-sans-3';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+const { title = `${site.title} (${site.shortName})`, description = `${site.theme}. ${site.dates}, ${site.location}.` } = Astro.props;
+const noindex = import.meta.env.PUBLIC_NOINDEX === 'true'; // set by the GitHub preview so drafts stay out of Google
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(u('/images/og-image.jpg'), Astro.site).href;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script is:inline src={u('/js-flag.js')}></script>
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#072e1e" />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href={u('/favicon.png')} type="image/png" />
+  <link rel="apple-touch-icon" href={u('/apple-touch-icon.png')} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={`${site.title} (${site.shortName})`} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <slot name="head" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <Header />
+  <main id="main"><slot /></main>
+  <Footer />
+  <script>
+    const els = document.querySelectorAll('main > section:not(.hero) .container');
+    els.forEach((el) => el.classList.add('reveal'));
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }), { threshold: 0.12 });
+    els.forEach((el) => io.observe(el));
+  </script>
+</body>
+</html>

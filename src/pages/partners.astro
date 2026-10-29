@@ -1,0 +1,51 @@
+---
+import { u } from '../utils/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+import { partners } from '../data/partners';
+const groups = Object.entries(partners.reduce<Record<string, typeof partners>>((acc, p) => {
+  (acc[p.category ?? 'Our partners'] ??= []).push(p); return acc;
+}, {}));
+const slots = Array.from({ length: 8 });
+---
+<BaseLayout title={`Partners | ${site.title} (${site.shortName})`} description={`Partners of the ${site.title}, ${site.dates}, ${site.location}.`}>
+  <PageHero eyebrow="Partners" title="Working together for a stronger science journalism ecosystem" intro="Partner announcements are coming soon. Confirmed partners will appear here." />
+
+  <section class="section" aria-label="Partners">
+    <div class="container">
+      {groups.length ? groups.map(([name, list]) => (
+        <div class="group">
+          <h2>{name}</h2>
+          <ul class="logos">
+            {list.map((p) => (
+              <li>{p.url
+                ? <a href={p.url} rel="noopener" aria-label={p.name}><img src={u(p.logo)} alt={p.name} loading="lazy" /></a>
+                : <img src={u(p.logo)} alt={p.name} loading="lazy" />}</li>
+            ))}
+          </ul>
+        </div>
+      )) : (
+        <ul class="logos">{slots.map(() => <li class="slot">Partner logo (TBC)</li>)}</ul>
+      )}
+    </div>
+  </section>
+
+  <section class="section mint" aria-labelledby="pw-h">
+    <div class="container">
+      <p class="eyebrow">Partner with us</p>
+      <h2 id="pw-h">Interested in partnering with ACSJ 2027?</h2>
+      <p>Information on partnership opportunities is coming soon. In the meantime, you are welcome to get in touch with the organisers.</p>
+      <a class="btn btn-outline" href={u('/contact')}>Contact the organisers →</a>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .group+.group{margin-top:var(--s6)}
+  .logos{list-style:none;padding:0;margin:var(--s3) 0 0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  .logos li{display:grid;place-items:center;min-height:7rem;padding:var(--s2);background:var(--white);border:1px solid #d3e3cc;border-radius:var(--r-md);box-shadow:0 1px 3px rgba(7,46,30,.08);transition:transform var(--ease),box-shadow var(--ease)}
+  .logos li:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(7,46,30,.12)}
+  .logos img{max-height:4.5rem;width:auto;max-width:100%;object-fit:contain}
+  .logos a{display:grid;place-items:center;width:100%;height:100%}
+  .slot{border:2px dashed var(--green-600)!important;background:var(--mint-50)!important;box-shadow:none!important;color:var(--green-800);font-size:.95rem}
+</style>

@@ -1,0 +1,79 @@
+---
+import { u } from '../../utils/url';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { site } from '../../data/site';
+---
+<BaseLayout title={`News | ${site.title} (${site.shortName})`} description={`News and updates from the ${site.title}.`}>
+  <PageHero eyebrow="News" title="News and updates" intro="The latest stories about the conference, published by MESHA." />
+  <section class="section" aria-label="News">
+    <div class="container">
+      <div id="wp-news" data-site={site.news.wpSite} data-category={site.news.categorySlug} data-count={site.news.perPage} aria-live="polite">
+        <p class="wpn-status">Loading the latest stories…</p>
+        <ul class="wpn-grid" hidden></ul>
+      </div>
+      <noscript><p class="wpn-status">Please turn on JavaScript to see the latest stories, or visit <a href={site.news.wpSite} rel="noopener">{site.domain}</a>.</p></noscript>
+      <aside class="wpn-ext" aria-labelledby="ext-h">
+        <h2 id="ext-h">From MESHA</h2>
+        <p>Read MESHA’s announcement of the 6th African Conference of Science Journalists.</p>
+        <a class="btn btn-outline" href="https://meshascience.org/mesha-set-to-hold-6th-african-conference-of-science-journalists-in-april-2027/" rel="noopener">Read the announcement →</a>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+<style is:global>
+  .wpn-status{padding:var(--s3);background:var(--mint-50);border-left:4px solid var(--lime-400);border-radius:var(--r-md);margin:0 0 var(--s6)}
+  .wpn-grid{list-style:none;padding:0;margin:0 0 var(--s6);display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+  .wpn-grid[hidden]{display:none}
+  .wpn-card{display:grid;gap:.6rem;align-content:start;padding:var(--s3);background:var(--white);border:1px solid #d3e3cc;border-top:4px solid var(--lime-400);border-radius:var(--r-md);box-shadow:0 1px 3px rgba(7,46,30,.08);transition:transform var(--ease),box-shadow var(--ease)}
+  .wpn-card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(7,46,30,.12)}
+  .wpn-card img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--s1)}
+  .wpn-card time{font:700 .8rem var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--green-600)}
+  .wpn-card h3{font-size:1.2rem;margin:0}.wpn-card h3 a{color:var(--green-800);text-decoration:none}.wpn-card h3 a:hover{text-decoration:underline}
+  .wpn-card p{margin:0}.wpn-more{font-weight:700}
+  .wpn-ext{padding:var(--s4);background:var(--green-800);color:var(--white);border-radius:var(--r-md)}
+  .wpn-ext h2{color:var(--white)}.wpn-ext p{color:#eaf3e4}
+  .wpn-ext .btn-outline{border-color:var(--lime-400);color:var(--lime-400)}.wpn-ext .btn-outline:hover{background:var(--lime-400);color:var(--green-950)}
+</style>
+<script>
+  const root = document.getElementById('wp-news');
+  if (root) {
+    const base = root.dataset.site!;
+    const status = root.querySelector<HTMLElement>('.wpn-status')!;
+    const list = root.querySelector<HTMLUListElement>('.wpn-grid')!;
+    const text = (html: string) => new DOMParser().parseFromString(html, 'text/html').body.textContent?.trim() ?? '';
+    const getJson = async (path: string) => {
+      const r = await fetch(`${base}/wp-json/wp/v2/${path}`, { headers: { Accept: 'application/json' } });
+      if (!r.ok) throw new Error(String(r.status));
+      return r.json();
+    };
+    const safe = (url: unknown) => typeof url === 'string' && url.startsWith(base + '/') ? url : null;
+    const none = () => { status.textContent = 'No conference stories have been published yet. Please check back soon.'; };
+    (async () => {
+      try {
+        const cats = await getJson(`categories?slug=${encodeURIComponent(root.dataset.category!)}&_fields=id`);
+        if (!cats.length) return none();
+        const posts = await getJson(`posts?categories=${cats[0].id}&per_page=${root.dataset.count}&_embed=wp:featuredmedia&_fields=id,date,link,title,excerpt,_embedded`);
+        if (!posts.length) return none();
+        for (const p of posts) {
+          const li = document.createElement('li'); li.className = 'wpn-card';
+          const media = p._embedded?.['wp:featuredmedia']?.[0];
+          const img = safe(media?.media_details?.sizes?.medium_large?.source_url ?? media?.source_url);
+          if (img) { const i = document.createElement('img'); i.src = img; i.alt = ''; i.loading = 'lazy'; li.append(i); }
+          const t = document.createElement('time'); t.dateTime = p.date;
+          t.textContent = new Date(p.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); li.append(t);
+          const h = document.createElement('h3'); const link = safe(p.link);
+          if (link) { const a = document.createElement('a'); a.href = link; a.rel = 'noopener'; a.textContent = text(p.title.rendered); h.append(a); } else h.textContent = text(p.title.rendered);
+          li.append(h);
+          const ex = text(p.excerpt.rendered); const para = document.createElement('p'); para.textContent = ex.length > 180 ? ex.slice(0, 177) + '…' : ex; li.append(para);
+          if (link) { const m = document.createElement('a'); m.className = 'wpn-more'; m.href = link; m.rel = 'noopener'; m.textContent = 'Read more →'; li.append(m); }
+          list.append(li);
+        }
+        status.hidden = true; list.hidden = false;
+      } catch {
+        status.textContent = 'We could not load the latest stories right now. You can read all MESHA news at ';
+        const a = document.createElement('a'); a.href = base + '/'; a.rel = 'noopener'; a.textContent = base.replace('https://', ''); status.append(a, '.');
+      }
+    })();
+  }
+</script>

@@ -1,0 +1,10 @@
+/* Sampled from the official MESHA logo (dark green #10583A, lime #A9D14F). Confirm with brand guide. */
+:root {
+  --green-950: #072e1e; --green-800: #10583a; --green-600: #1a7a4f;
+  --lime-400: #a9d14f; --mint-50: #eef6e9; --white: #fff; --ink: #0e1a12;
+  --font-display: 'Montserrat Variable', system-ui, sans-serif;
+  --font-body: 'Source Sans 3 Variable', system-ui, sans-serif;
+  --step-h2: clamp(1.6rem, 1.1rem + 2vw, 2.5rem);
+  --s1: .5rem; --s2: 1rem; --s3: 1.5rem; --s4: 2rem; --s6: 3rem; --s8: 5rem;
+  --r-md: 1rem; --r-pill: 999px; --max: 1200px; --ease: 250ms ease;
+}
