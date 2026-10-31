@@ -1,0 +1,13 @@
+---
+import { site } from '../data/site';
+---
+{site.socials.length > 0 && (
+  <ul class="social" aria-label="MESHA on social media">
+    {site.socials.map((s) => <li><a href={s.href} rel="noopener" aria-label={`MESHA on ${s.label}`}>{s.label}</a></li>)}
+  </ul>
+)}
+<style>
+  .social{list-style:none;padding:0;margin:var(--s2) 0 0;display:flex;flex-wrap:wrap;gap:.5rem}
+  .social a{display:inline-flex;align-items:center;min-height:2.5rem;padding:.25rem 1rem;border:2px solid var(--lime-400);border-radius:var(--r-pill);color:var(--lime-400);text-decoration:none;font:700 .85rem var(--font-display);transition:background var(--ease),color var(--ease)}
+  .social a:hover{background:var(--lime-400);color:var(--green-950)}
+</style>

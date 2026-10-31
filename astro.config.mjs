@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: process.env.SITE_URL || 'https://acsj.meshascience.org',
   base: process.env.BASE_PATH || '/',
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.includes('demo-registration') })],
   build: { inlineStylesheets: 'never' },      // keeps CSS in files so a strict Content-Security-Policy works
   vite: { build: { assetsInlineLimit: 0 } },  // same for scripts
 });

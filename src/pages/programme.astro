@@ -4,12 +4,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { site } from '../data/site';
 import { programme, programmePdf } from '../data/programme';
+import { topics, showLeads } from '../data/topics';
+import { fieldTours } from '../data/fieldtours';
 ---
 <BaseLayout title={`Programme | ${site.title} (${site.shortName})`} description={`Programme of the ${site.title}, ${site.dates}, ${site.location}.`}>
   <PageHero eyebrow="Programme" title="Three days of insight, engagement and action" intro="The full programme is coming soon. Sessions will appear here once confirmed." />
   <section class="section" aria-label="Daily programme">
     <div class="container">
-      <div class="dl">
+      <ul class="jump" aria-label="On this page">
+        <li><a href="#daily">Daily programme</a></li><li><a href="#topics">Conference topics</a></li><li><a href="#field-tours">Field tours</a></li>
+      </ul>
+      <div class="dl" id="daily">
         {programmePdf
           ? <a class="btn btn-primary" href={u(programmePdf)} download>Download the programme (PDF) ↓</a>
           : <span class="btn btn-soon" aria-disabled="true">Programme PDF coming soon</span>}
@@ -39,6 +44,36 @@ import { programme, programmePdf } from '../data/programme';
       ))}
     </div>
   </section>
+  <section class="section mint" id="topics" aria-labelledby="tp-h">
+    <div class="container">
+      <p class="eyebrow">Conference topics</p>
+      <h2 id="tp-h">What we will be discussing</h2>
+      <p>Sessions, speakers and times will be announced.</p>
+      <ol class="topics">
+        {topics.map((t) => (
+          <li><h3>{t.title}</h3>
+            {t.description && <p>{t.description}</p>}
+            {showLeads && t.lead && <p class="lead">{t.lead}</p>}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+  <section class="section" id="field-tours" aria-labelledby="ft-h">
+    <div class="container">
+      <p class="eyebrow">Field tours</p>
+      <h2 id="ft-h">See science in action</h2>
+      <p>Visits to institutions and enterprises across Kenya. Dates and arrangements will be announced.</p>
+      <ul class="tours">
+        {fieldTours.map((f) => (
+          <li><h3>{f.name}</h3>
+            {f.location && <span class="badge">{f.location}</span>}
+            <p>{f.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
 </BaseLayout>
 <style>
   .tabs{display:flex;gap:var(--s1);flex-wrap:wrap;margin-bottom:var(--s4)}
@@ -53,7 +88,17 @@ import { programme, programmePdf } from '../data/programme';
   @media(max-width:560px){.sessions li{grid-template-columns:1fr}}
   time{font:800 1rem var(--font-display);color:var(--green-600)}
   h3{font-size:1.15rem;margin:0 0 .3rem}.meta{margin:.3rem 0 0;font-size:.95rem}
-:global(html:not(.js)) .tabs{display:none}
+.jump{list-style:none;padding:0;margin:0 0 var(--s4);display:flex;flex-wrap:wrap;gap:.5rem}
+  .jump a{display:inline-flex;align-items:center;min-height:2.5rem;padding:.25rem 1rem;border:2px solid var(--green-800);border-radius:var(--r-pill);color:var(--green-800);text-decoration:none;font:700 .85rem var(--font-display)}
+  .jump a:hover{background:var(--green-800);color:var(--white)}
+  .topics{list-style:none;counter-reset:t;padding:0;margin:var(--s4) 0 0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr))}
+  .topics li{counter-increment:t;position:relative;padding:var(--s3) var(--s3) var(--s3) 4.25rem;background:var(--white);border-radius:var(--r-md);box-shadow:0 1px 3px rgba(7,46,30,.08)}
+  .topics li::before{content:counter(t);position:absolute;left:var(--s3);top:var(--s3);width:2.2rem;height:2.2rem;display:grid;place-items:center;border-radius:50%;background:var(--green-800);color:var(--lime-400);font:800 .95rem var(--font-display)}
+  .topics p,.tours p{margin:.4rem 0 0}.lead{font-weight:700;color:var(--green-600)}
+  .tours{list-style:none;padding:0;margin:var(--s4) 0 0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr))}
+  .tours li{padding:var(--s3);background:var(--white);border:1px solid #d3e3cc;border-top:4px solid var(--lime-400);border-radius:var(--r-md);box-shadow:0 1px 3px rgba(7,46,30,.08)}
+  .tours .badge{margin-top:.2rem}
+  :global(html:not(.js)) .tabs{display:none}
 </style>
 <script>
   const tabs = [...document.querySelectorAll<HTMLElement>('[role=tab]')];

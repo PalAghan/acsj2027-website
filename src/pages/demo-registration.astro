@@ -1,0 +1,63 @@
+---
+// LOCALHOST DEMO ONLY. On the real site and the GitHub preview this page just redirects to the Registration page.
+import { u } from '../utils/url';
+if (!import.meta.env.DEV) return Astro.redirect(u('/registration'));
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+<BaseLayout title="Registration demo (localhost only)">
+  <PageHero eyebrow="Demo" title="Registration demo" intro="For testing on your computer only. Dummy fees, dummy invoice and a sample programme. Nothing is paid." />
+  <section class="section" aria-label="Demo registration form">
+    <div class="container">
+      <p class="warn"><strong>Demo only.</strong> Make sure <code>npm run demo:server</code> is running in a second terminal.</p>
+      <form id="demo-form" novalidate>
+        <label>Full name<input name="name" required maxlength="100" autocomplete="name" /></label>
+        <label>Email address<input name="email" type="email" required maxlength="150" autocomplete="email" /></label>
+        <label>Organisation (optional)<input name="organisation" maxlength="150" autocomplete="organization" /></label>
+        <label>Category (demo)
+          <select name="category" required>
+            <option value="journalist">Journalist (demo)</option>
+            <option value="researcher">Researcher (demo)</option>
+            <option value="other">Other participant (demo)</option>
+          </select>
+        </label>
+        <fieldset>
+          <legend>Payment</legend>
+          <label class="inline"><input type="radio" name="payment" value="now" checked /> Pay now (simulated): I will get a receipt</label>
+          <label class="inline"><input type="radio" name="payment" value="later" /> Pay later: send me an invoice</label>
+        </fieldset>
+        <div class="hp" aria-hidden="true"><label>Leave empty<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <button class="btn btn-primary" type="submit">Submit registration (demo)</button>
+        <p id="demo-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .warn{padding:var(--s2);background:#fff3cd;border-radius:var(--r-md)}
+  form{display:grid;gap:var(--s3);max-width:34rem}
+  label{display:grid;gap:.35rem;font-weight:600}
+  .inline{display:flex;gap:.6rem;align-items:center;font-weight:400}
+  input:not([type=radio]),select{padding:.75rem;border:2px solid #9bb7a5;border-radius:.6rem;font:inherit;min-height:3rem}
+  input:focus,select:focus{border-color:var(--green-600)}
+  fieldset{border:2px solid #d3e3cc;border-radius:var(--r-md);padding:var(--s2);display:grid;gap:.5rem}
+  legend{font-weight:700;padding-inline:.4rem}
+  .hp{position:absolute;left:-9999px}
+  #demo-status{margin:0;font-weight:600}
+</style>
+<script>
+  const form = document.getElementById('demo-form') as HTMLFormElement | null;
+  const status = document.getElementById('demo-status')!;
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const btn = form.querySelector('button')!; btn.disabled = true; status.textContent = 'Sending…';
+    try {
+      const res = await fetch('http://localhost:3000/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+      const out = await res.json();
+      status.textContent = out.ok ? `Thank you. Reference ${out.reference}. ` + (out.mode === 'sent' ? 'Check your email.' : 'Emails were saved in the demo-outbox folder.') : out.error;
+      if (out.ok) form.reset();
+    } catch { status.textContent = 'Could not reach the demo server. Is "npm run demo:server" running?'; }
+    btn.disabled = false;
+  });
+</script>

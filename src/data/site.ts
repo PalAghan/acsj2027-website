@@ -13,7 +13,12 @@ export const site = {
   organiser: 'MESHA',
   organiserFull: 'Media for Environment, Science, Health and Agriculture',
   registerHref: '/registration',       // points to the Registration page; swap for an external form later if needed
-  socials: [] as { label: string; href: string }[], // TBC
+  socials: [
+    { label: 'X', href: 'https://x.com/MeshaScience' },
+    { label: 'Facebook', href: 'https://www.facebook.com/MESHASci/' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mesha-journalists-179368199/' },
+    { label: 'YouTube', href: 'https://www.youtube.com/channel/UCcEZb2kATHVRn_dEWPT0IgA' },
+  ],
   // Conference stories are read from this WordPress category (WordPress dashboard > Posts > Categories > slug).
   news: { wpSite: 'https://meshascience.org', categorySlug: 'acsj-2027', perPage: 6 },
   nav: [

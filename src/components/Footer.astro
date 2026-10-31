@@ -1,12 +1,14 @@
 ---
 import { u } from '../utils/url';
 import { site } from '../data/site';
+import SocialLinks from './SocialLinks.astro';
 ---
 <footer class="dark section">
   <div class="container grid">
     <div>
       <a class="logo" href={u('/')}><img src={u('/images/mesha-logo-reversed.png')} width="755" height="331" alt="MESHA" loading="lazy" /></a>
       <p>{site.organiserFull}</p>
+      <SocialLinks />
     </div>
     <div>
       <p><strong>{site.title} ({site.shortName})</strong></p>

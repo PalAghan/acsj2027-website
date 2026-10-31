@@ -19,3 +19,10 @@ Node.js 22.23.4 or newer (check with `node -v`).
 2. Keyboard: Tab shows skip link first, visible focus everywhere, Esc closes the mobile menu, speaker track scrolls with arrow keys.
 3. Chrome DevTools > Lighthouse: Accessibility should be 95+.
 4. OS "reduce motion" on: no smooth scrolling or transitions.
+
+## Registration demo (localhost only)
+1. `npm install`
+2. Copy `.env.example` to `.env` and put your email in `ORGANISER_EMAIL`.
+3. Terminal 1: `npm run dev`. Terminal 2: `npm run demo:server`.
+4. Open http://localhost:4321/demo-registration and submit the form.
+Without SMTP settings, the emails and PDFs are saved in the `demo-outbox` folder. The demo is not part of the real site.
